@@ -911,7 +911,7 @@ function connectslide_create_display( $connectslide ){
     $connectslideid = empty($element[5]) ? 0 : $element[5];
     $grouping = '';
 
-    if (!$PAGE->user_allowed_editing()) {
+    if (!(!empty($PAGE->context) && $PAGE->user_allowed_editing())) {
         if (!empty($startdate) and time() < strtotime($startdate)) return;
         if (!empty($enddate) and time() > strtotime($enddate)) return;
     } else $nomouseover = false;
@@ -1073,7 +1073,7 @@ function connectslide_create_display( $connectslide ){
         }
         $overtext .= $strtime . $strtele;
 
-        if ($PAGE->user_allowed_editing()) {
+        if (!empty($PAGE->context) && $PAGE->user_allowed_editing()) {
             if( $course = $DB->get_record( 'course', array( 'id' => $connectslide->course ) ) ){
                 $editcontext = context_course::instance($course->id);
             }else{
