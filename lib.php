@@ -1073,7 +1073,7 @@ function connectslide_create_display( $connectslide ){
         }
         $overtext .= $strtime . $strtele;
 
-        if (!empty($PAGE->context->id) && $PAGE->user_allowed_editing() && $USER->editing) {
+        if (!empty($PAGE->context->id) && $PAGE->user_allowed_editing() && !empty($USER->editing)) {
             if( $course = $DB->get_record( 'course', array( 'id' => $connectslide->course ) ) ){
                 $editcontext = context_course::instance($course->id);
             }else{
