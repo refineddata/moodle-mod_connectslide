@@ -88,20 +88,20 @@ class mod_connectslide_mod_form extends moodleform_mod
         $formgroup[] = &$mform->createElement('text', 'url', '',
             array('maxlength' => 255, 'size' => 48, 'class' => 'ignoredirty'));
         $mform->setType('url', ( ! empty($CFG->formatstringstriptags)) ? PARAM_TEXT : PARAM_CLEAN);
-        if ( ! isset($_REQUEST['update'])) {
+        if (empty($_REQUEST['update'])) {
             $formgroup[] = &$mform->createElement('button', 'browse', get_string('browse', 'connectslide'));
         }
         $mform->addElement('group', 'urlgrp', get_string('url', 'connectslide'), $formgroup, array(' '), false);
         $mform->setDefault('url', $url);
-        if ( ! isset($_REQUEST['update'])) {
-            $mform->addRule( 'urlgrp', null, 'required', null, 'client' );
+        if ( empty($_REQUEST['update'])) {
+            $mform->addRule( 'urlgrp', null, 'required');
             $mform->addGroupRule( 'urlgrp', array(
                 'url' => array(
                     array( null, 'required', null, 'client' )
                 ),
             ) );
         }
-        if (isset($_REQUEST['update'])) {
+        if (!empty($_REQUEST['update'])) {
             $mform->hardFreeze('urlgrp');
         }
 
@@ -342,7 +342,7 @@ class mod_connectslide_mod_form extends moodleform_mod
                 $mform->setDefault('urlgrp', $url);
 
                 //Make URL field uneditable if editing existing activity
-                if (isset($_REQUEST['update'])) {
+                if (!empty($_REQUEST['update'])) {
                     $element = &$mform->createElement('text', 'url', get_string('url', 'connectslide'));
                     $mform->setType('url', ( ! empty($CFG->formatstringstriptags)) ? PARAM_TEXT : PARAM_CLEAN);
                     $mform->insertElementBefore($element, 'urlgrp');
@@ -352,7 +352,7 @@ class mod_connectslide_mod_form extends moodleform_mod
                     $mform->removeElement('urlgrp', true);
                 }
 
-                if ((isset($CFG->connect_update) && $CFG->connect_update) || ! isset($_REQUEST['update'])) {
+                if ((isset($CFG->connect_update) && $CFG->connect_update) || empty($_REQUEST['update'])) {
                     $mform->setDefault('name', $info->name);
                     $mform->setDefault('introeditor', array('text' => $info->desc));
                 }
