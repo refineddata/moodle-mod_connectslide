@@ -1432,3 +1432,64 @@ function connectslide_page_type_list($pagetype, $parentcontext, $currentcontext)
     $module_pagetype = array('mod-connectslide-*' => 'Any connect page type');
     return $module_pagetype;
 }
+
+/**
+ * Runs Instant Grading
+ *
+ *  Gets and processes entries who's recheck time has elapsed.
+ *
+ * @return boolean
+ **/
+function connectslide_instant_regrade($connectslide, $userid=null) {
+
+    global $CFG, $USER, $DB;
+
+    if (empty($userid)){
+        $userid = $USER->id;
+    }
+
+    //Instant Grading - just return
+    //if (isset($CFG->connect_instant_grade) AND $CFG->connect_instant_grade == 1) return true;
+    //echo "SELECT * FROM {$CFG->prefix}connectslide_entries WHERE rechecks > 0 AND rechecktime < $now \n";
+    //Entries Every 15min
+    $now = time();
+
+    if (!$entries = $DB->get_records_sql("SELECT * FROM {$CFG->prefix}connectslide_entries WHERE grade < 100 AND rechecktime < $now AND connectslideid=". $connectslide->id . " and userid=" . $userid)) return true;
+
+    foreach ($entries as $entry) {
+
+        if (!connectslide_grade_entry($userid, $connectslide, $entry)) continue;
+
+        $DB->update_record('connectslide_entries', $entry);
+
+        if ($cm = get_coursemodule_from_instance('connectslide', $connectslide->id)) {
+            if ($course = $DB->get_record('course', array('id' => $connectslide->course))) {
+                $completion = new completion_info($course);
+                if ($completion->is_enabled($cm)) {
+                    $completion->update_state($cm, COMPLETION_COMPLETE, $userid);
+                    //rebuild_course_cache($connectslide->course);
+                }
+            }
+        }
+        /*
+        if ($entry->grade == 100 AND $cm = get_coursemodule_from_instance('connectslide', $connectslide->id)) {
+            // Mark Users Complete
+            if ($cmcomp = $DB->get_record('course_modules_completion', array('coursemoduleid' => $cm->id, 'userid' => $userid))) {
+                $cmcomp->completionstate = 1;
+                $cmcomp->viewed = 1;
+                $cmcomp->timemodified = time();
+                $DB->update_record('course_modules_completion', $cmcomp);
+            } else {
+                $cmcomp = new stdClass;
+                $cmcomp->coursemoduleid = $cm->id;
+                $cmcomp->userid = $userid;
+                $cmcomp->completionstate = 1;
+                $cmcomp->viewed = 1;
+                $cmcomp->timemodified = time();
+                $DB->insert_record('course_modules_completion', $cmcomp);
+            }
+            rebuild_course_cache($connectslide->course);
+        }*/
+    }
+    return true;
+}
