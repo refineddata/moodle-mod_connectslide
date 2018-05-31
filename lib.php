@@ -1073,7 +1073,7 @@ function connectslide_create_display( $connectslide ){
         }
         $overtext .= $strtime . $strtele;
 
-        if (!empty($PAGE->context) && !empty($PAGE->context->id) && $PAGE->user_allowed_editing() && !empty($USER->editing) && empty(strstr($PAGE->url, 'launch')) && empty(strstr($PAGE->url, 'modedit')) && empty(strstr($PAGE->url, 'rest'))) {
+        if (($PAGE->context) && !empty($PAGE->context->id) && $PAGE->user_allowed_editing() && !empty($USER->editing) && empty(strstr($PAGE->url, 'launch')) && empty(strstr($PAGE->url, 'modedit')) && empty(strstr($PAGE->url, 'rest'))) {
             if( $course = $DB->get_record( 'course', array( 'id' => $connectslide->course ) ) ){
                 $editcontext = context_course::instance($course->id);
             }else{
