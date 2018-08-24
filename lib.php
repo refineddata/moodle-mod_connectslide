@@ -1079,16 +1079,30 @@ function connectslide_create_display( $connectslide ){
             }else{
                 $editcontext = context_system::instance();
             }
+
+            // for Moodle 3.3 onwards
+            if (method_exists($OUTPUT, 'image_url')){
+                $edit_icon = $OUTPUT->image_url('/t/edit');
+                $return_icon = $OUTPUT->image_url('/i/return');
+                $groups_icon = $OUTPUT->image_url('/t/groups');
+                $calendar_icon = $OUTPUT->image_url('/t/calendar');
+            } else {
+                $edit_icon = $OUTPUT->pix_url('/t/edit');
+                $return_icon = $OUTPUT->pix_url('/i/return');
+                $groups_icon = $OUTPUT->pix_url('/t/groups');
+                $calendar_icon = $OUTPUT->pix_url('/t/calendar');
+            }
+
             if (has_capability('filter/connect:editresource', $editcontext)) {
                 $overtext .= '<a href="' . $link . '&edit=' . $connectslide->ac_id . '&type=' . $connectslide->ac_type . '" target="'.$linktarget.'" >';
                 //$overtext .= '<img src="' . $CFG->wwwroot . '/mod/connectslide/images/adobe.gif" border="0" align="middle"> ';
                 //$overtext .= get_string('launch_edit', 'connectslide') . '</a><br/>';
-                $overtext .= "<img src='" . $OUTPUT->pix_url('/t/edit') . "' class='iconsmall' title='" . get_string('launch_edit', 'connectslide')  ."' />". "</a>";
+                $overtext .= "<img src='" . $edit_icon . "' class='iconsmall' title='" . get_string('launch_edit', 'connectslide')  ."' />". "</a>";
 
                 $overtext .= '<a href="#" id="connectslide-update-from-adobe" data-connectslideid="'.$connectslide->id.'">';
                 //$overtext .= '<img src="' . $CFG->wwwroot . '/mod/connectslide/images/adobe.gif" border="0" align="middle"> ';
                 //$overtext .= get_string('update_from_adobe', 'connectslide') . '</a><br/>';
-                $overtext .= "<img src='" . $OUTPUT->pix_url('/i/return') . "' class='iconsmall' title='" . get_string('update_from_adobe', 'connectslide')  ."' />". "</a>";
+                $overtext .= "<img src='" . $return_icon . "' class='iconsmall' title='" . get_string('update_from_adobe', 'connectslide')  ."' />". "</a>";
             }
 
             /*if ($connectslide->ac_type == 'meeting') {
