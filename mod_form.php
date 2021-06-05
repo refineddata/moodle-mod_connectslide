@@ -189,7 +189,7 @@ class mod_connectslide_mod_form extends moodleform_mod
             //$mform->setDefault('iconmouse', $default);
             //$mform->setAdvanced('iconmouse', 'icon');
 
-            $mform->addElement('htmleditor', 'extrahtml', get_string('extrahtml', 'connectslide'),
+            $mform->addElement('editor', 'extrahtml', get_string('extrahtml', 'connectslide'),
                 array('cols' => '64', 'rows' => '8'));
             //$mform->setAdvanced('extrahtml', 'icon');
 
