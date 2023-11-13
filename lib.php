@@ -1193,8 +1193,10 @@ function connectslide_mod_tzabbr() {
     return $dt->format('T');
 }
 
-function connectslide_grade_meeting($courseid, $url, $connectslide = null, $startdaterange, $enddaterange, $regrade) {
+function connectslide_grade_meeting($courseid, $url, $connectslide, $startdaterange, $enddaterange, $regrade) {
     global $CFG, $DB, $USER;
+
+    if(!isset($connectslide)) $connectslide = null;
 
     if (!$connectslide AND !$connectslide = $DB->get_record('connectslide', array('course' => $courseid, 'url' => $url))) return false;
 
